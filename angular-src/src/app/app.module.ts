@@ -13,6 +13,12 @@ import {LoginComponent} from "./components/login/login.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {RegisterComponent} from "./components/register/register.component";
 
+import {ValidateService} from "./services/validate.service";
+import {AuthService} from "./services/auth.service";
+import {AuthGuard} from "./guards/auth.guard";
+
+import { FlashMessagesModule } from 'angular2-flash-messages';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,9 +33,14 @@ import {RegisterComponent} from "./components/register/register.component";
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FlashMessagesModule
   ],
-  providers: [],
+  providers: [
+    ValidateService,
+    AuthService,
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
