@@ -5,7 +5,9 @@ const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
-
+const fs = require('fs');
+const morgan = require('morgan');
+const rfs = require('rotating-file-stream');
 // Connect To Database
 mongoose.connect(config.database);
 
@@ -21,10 +23,24 @@ mongoose.connection.on('error', (err) => {
 
 const app = express();
 
+// log directory
+const logDirectory = path.join(__dirname, 'log');
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+// create a rotating write stream
+const accessLogStream = rfs('access.log', {
+    interval: '1d', // rotate daily
+    path: logDirectory
+});
+// setup the logger
+app.use(morgan('combined', {stream: accessLogStream}));
+
 const users = require('./routes/users');
 
 // Port Number
 const port = 3040;
+
+app.use(morgan('combined', {stream: accessLogStream}));
 
 // CORS Middleware
 app.use(cors());
